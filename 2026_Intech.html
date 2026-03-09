@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INTECH Construction — Эксперт в реставрации</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --dark: #0A0C10;
+    --dark2: #111520;
+    --dark3: #181D2A;
+    --steel: #1E2535;
+    --stone: #2A3245;
+    --text: #E8EAF0;
+    --text-muted: #8A94B0;
+    --accent: #4A7FD4;
+    --accent2: #C9A84C;
+    --border: rgba(201,168,76,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s;
+    mix-blend-mode: difference;
+  }
+  .cursor-follower {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.15s ease;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 20px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(180deg, rgba(10,12,16,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--text);
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #060810 0%, #0D1220 40%, #131828 100%);
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 40%, rgba(201,168,76,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 80% at 10% 80%, rgba(74,127,212,0.05) 0%, transparent 50%);
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  /* Animated blueprint lines */
+  .hero-lines {
+    position: absolute; inset: 0; overflow: hidden;
+  }
+  .hero-lines::before, .hero-lines::after {
+    content: '';
+    position: absolute;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    height: 1px;
+    width: 60%;
+    opacity: 0.15;
+    animation: scanLine 6s ease-in-out infinite;
+  }
+  .hero-lines::before { top: 35%; animation-delay: 0s; }
+  .hero-lines::after { top: 65%; animation-delay: 3s; width: 40%; left: 30%; }
+
+  @keyframes scanLine {
+    0%, 100% { transform: translateX(-100%); opacity: 0; }
+    50% { opacity: 0.2; }
+    100% { transform: translateX(200%); opacity: 0; }
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    max-width: 1100px;
+    padding: 0 40px;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 160px);
+    line-height: 0.9;
+    letter-spacing: 8px;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .hero-title .line1 {
+    display: block;
+    background: linear-gradient(135deg, #fff 0%, #C9A84C 50%, #fff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeUp 0.8s 0.4s forwards, shimmer 4s 1.2s ease-in-out infinite;
+  }
+
+  .hero-title .line2 {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201,168,76,0.4);
+    font-size: clamp(48px, 8vw, 110px);
+  }
+
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% center; }
+    50% { background-position: 200% center; }
+  }
+
+  .hero-expert {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 3vw, 28px);
+    font-style: italic;
+    color: var(--gold-light);
+    margin: 20px 0 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+    line-height: 1.4;
+  }
+
+  .hero-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    max-width: 680px;
+    margin: 0 auto 48px;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .hero-cta {
+    display: inline-flex; gap: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  .btn-primary {
+    padding: 16px 40px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #0A0C10;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: none;
+    transition: all 0.3s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(201,168,76,0.3);
+  }
+
+  .btn-outline {
+    padding: 16px 40px;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(138,148,176,0.3);
+    cursor: none;
+    transition: all 0.3s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── STATS ── */
+  #stats {
+    padding: 100px 60px;
+    background: var(--dark2);
+    position: relative;
+  }
+  #stats::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .stat-card {
+    background: var(--steel);
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    border: 1px solid transparent;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(201,168,76,0.04));
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .stat-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(201,168,76,0.1);
+    z-index: 2;
+  }
+  .stat-card:hover::before { opacity: 1; }
+
+  .stat-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+    display: block;
+    transition: transform 0.4s;
+  }
+  .stat-card:hover .stat-icon { transform: scale(1.2) rotate(5deg); }
+
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    line-height: 1;
+    color: var(--gold);
+    display: block;
+    transition: color 0.3s;
+  }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 12px;
+    display: block;
+  }
+
+  .stat-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-weight: 300;
+    opacity: 0.7;
+  }
+
+  /* ── ABOUT ── */
+  #about {
+    padding: 120px 60px;
+    background: var(--dark3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-decoration {
+    position: absolute;
+    right: -100px; top: -100px;
+    width: 500px; height: 500px;
+    border: 1px solid rgba(201,168,76,0.06);
+    border-radius: 50%;
+    animation: slowRotate 30s linear infinite;
+  }
+  .about-decoration::before {
+    content: '';
+    position: absolute; inset: 40px;
+    border: 1px solid rgba(201,168,76,0.04);
+    border-radius: 50%;
+  }
+
+  @keyframes slowRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .section-header {
+    margin-bottom: 80px;
+  }
+
+  .section-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 20px;
+  }
+  .section-tag::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    line-height: 1;
+    letter-spacing: 4px;
+    max-width: 700px;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .about-text p {
+    font-size: 15px;
+    line-height: 2;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    font-weight: 300;
+  }
+  .about-text p strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .about-mission {
+    background: var(--steel);
+    border-left: 3px solid var(--gold);
+    padding: 32px 40px;
+    margin-top: 40px;
+    position: relative;
+  }
+  .about-mission::before {
+    content: '"';
+    position: absolute; top: -20px; left: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px;
+    color: var(--gold);
+    opacity: 0.3;
+    line-height: 1;
+  }
+  .about-mission p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .about-visual {
+    position: relative;
+  }
+
+  .cycle-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .cycle-step {
+    display: flex; align-items: center; gap: 24px;
+    background: var(--steel);
+    padding: 24px 32px;
+    border: 1px solid transparent;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .cycle-step::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--gold);
+    transform: scaleY(0);
+    transition: transform 0.3s;
+  }
+  .cycle-step:hover { border-color: var(--border); }
+  .cycle-step:hover::before { transform: scaleY(1); }
+
+  .cycle-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--gold);
+    opacity: 0.4;
+    min-width: 40px;
+  }
+
+  .cycle-info h4 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .cycle-info p {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  /* ── SERVICES ── */
+  #services {
+    padding: 120px 60px;
+    background: var(--dark);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .service-card {
+    background: var(--dark2);
+    padding: 48px 36px;
+    border: 1px solid rgba(30,37,53,0.8);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    group: true;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--accent));
+    transform: scaleX(0);
+    transition: transform 0.4s;
+    transform-origin: left;
+  }
+  .service-card:hover { background: var(--steel); transform: translateY(-4px); }
+  .service-card:hover::after { transform: scaleX(1); }
+
+  .service-icon {
+    font-size: 48px;
+    margin-bottom: 28px;
+    display: block;
+  }
+
+  .service-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .service-desc {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  .service-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 28px;
+  }
+
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--gold);
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .tag:hover { background: rgba(201,168,76,0.15); }
+
+  /* ── PORTFOLIO ── */
+  #portfolio {
+    padding: 120px 60px;
+    background: var(--dark2);
+    position: relative;
+  }
+
+  .portfolio-intro {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 700px;
+    line-height: 1.7;
+    margin-bottom: 80px;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .portfolio-card {
+    background: var(--dark3);
+    padding: 48px 40px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+  .portfolio-card::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 80px; height: 80px;
+    background: linear-gradient(225deg, rgba(201,168,76,0.08), transparent);
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+    transition: width 0.4s, height 0.4s;
+  }
+  .portfolio-card:hover { border-color: rgba(201,168,76,0.4); transform: scale(1.01); }
+  .portfolio-card:hover::before { width: 150px; height: 150px; }
+  .portfolio-card.featured { grid-column: span 2; }
+
+  .portfolio-meta {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .portfolio-type {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+  }
+
+  .portfolio-year {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .portfolio-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  .portfolio-card.featured .portfolio-title { font-size: 40px; }
+
+  .portfolio-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    font-weight: 300;
+    margin-bottom: 28px;
+  }
+
+  .portfolio-stats {
+    display: flex; gap: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .p-stat { }
+  .p-stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--gold);
+    display: block;
+  }
+  .p-stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  /* ── CLIENTS ── */
+  #clients {
+    padding: 120px 60px;
+    background: var(--dark3);
+  }
+
+  .clients-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .client-card {
+    background: var(--dark2);
+    padding: 36px 28px;
+    border: 1px solid transparent;
+    text-align: center;
+    transition: all 0.4s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .client-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.03), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .client-card:hover { border-color: var(--border); transform: translateY(-4px); }
+  .client-card:hover::after { opacity: 1; }
+
+  .client-abbr {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .client-name {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .client-sector {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(201,168,76,0.5);
+    margin-top: 12px;
+    display: block;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #060810;
+    padding: 60px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 6px;
+    color: var(--text);
+  }
+  .footer-logo span { color: var(--gold); }
+
+  .footer-copy {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+
+  .footer-since {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--gold);
+    opacity: 0.6;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    #hero, #stats, #about, #services, #portfolio, #clients, footer { padding-left: 24px; padding-right: 24px; }
+    .stats-grid, .services-grid { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .portfolio-card.featured { grid-column: span 1; }
+    .clients-grid { grid-template-columns: repeat(2, 1fr); }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+    body { cursor: auto; }
+    .cursor, .cursor-follower { display: none; }
+  }
+
+  /* Counter Animation */
+  .count-up { display: inline; }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.2;
+    margin: 0;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="cursorFollower"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">IN<span>TECH</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">О компании</a></li>
+    <li><a href="#services">Направления</a></li>
+    <li><a href="#portfolio">Портфолио</a></li>
+    <li><a href="#clients">Заказчики</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">// Строительная компания · Основана в 2007 году</div>
+    <h1 class="hero-title">
+      <span class="line1">INTECH</span>
+      <span class="line2">CONSTRUCTION</span>
+    </h1>
+    <p class="hero-expert">Компания-эксперт в области реставрации и сохранения памятников архитектуры</p>
+    <p class="hero-desc">Весь комплекс строительно-монтажных и проектных работ. На рынке с 2007 года. Выполнено проектов на сумму, превышающую 15 млрд рублей.</p>
+    <div class="hero-cta">
+      <a href="#portfolio" class="btn-primary">Портфолио проектов</a>
+      <a href="#about" class="btn-outline">О компании</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-card reveal">
+      <span class="stat-icon">🏛️</span>
+      <span class="stat-number" data-target="18">0</span><span style="font-family:'Bebas Neue';font-size:72px;color:var(--gold)">+</span>
+      <span class="stat-label">Лет на рынке сложного инжиниринга</span>
+      <div class="stat-sub">Реализуем технически сложные проекты с 2007 года</div>
+    </div>
+    <div class="stat-card reveal" style="transition-delay:0.1s">
+      <span class="stat-icon">💎</span>
+      <span class="stat-number" data-target="15">0</span><span style="font-family:'Bebas Neue';font-size:72px;color:var(--gold)">+ млрд ₽</span>
+      <span class="stat-label">Портфель проектов</span>
+      <div class="stat-sub">Суммарная стоимость выполненных проектов</div>
+    </div>
+    <div class="stat-card reveal" style="transition-delay:0.2s">
+      <span class="stat-icon">🏰</span>
+      <span class="stat-number" data-target="40">0</span><span style="font-family:'Bebas Neue';font-size:72px;color:var(--gold)">+</span>
+      <span class="stat-label">Исторических объектов</span>
+      <div class="stat-sub">Восстановлено объектов культурного наследия</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-decoration"></div>
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-header reveal">
+      <div class="section-tag">О компании</div>
+      <h2 class="section-title">Более 18 лет технической экспертизы</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Более <strong>18 лет</strong> мы реализуем технически сложные проекты, объединяя традиции реставрации с передовыми инженерными решениями.</p>
+        <p>Наш подход базируется на <strong>жизненном цикле объекта</strong>: от высокоточных инженерных изысканий и проектирования до капитального строительства и бережного восстановления памятников культурного наследия.</p>
+        <p>Собственная многопрофильная команда инженеров, изыскателей и реставраторов высшей квалификации гарантирует <strong>безупречное исполнение</strong> государственных и коммерческих контрактов любого уровня сложности.</p>
+        <div class="about-mission">
+          <p>Создание комфортных, цивилизованных условий для жизни и деятельности клиентов. Мы ставим в приоритет высокое качество работ, обязательность выполнения всех пунктов контракта, заботу о благе каждого российского гражданина, компании, организации.</p>
+        </div>
+      </div>
+      <div class="about-visual reveal">
+        <div class="cycle-diagram">
+          <div class="cycle-step">
+            <div class="cycle-num">01</div>
+            <div class="cycle-info">
+              <h4>Инженерные изыскания</h4>
+              <p>Высокоточная оценка объекта и площадки</p>
+            </div>
+          </div>
+          <div class="cycle-step">
+            <div class="cycle-num">02</div>
+            <div class="cycle-info">
+              <h4>Проектирование</h4>
+              <p>Комплексное проектирование любой сложности</p>
+            </div>
+          </div>
+          <div class="cycle-step">
+            <div class="cycle-num">03</div>
+            <div class="cycle-info">
+              <h4>СМР</h4>
+              <p>Строительно-монтажные работы полного цикла</p>
+            </div>
+          </div>
+          <div class="cycle-step">
+            <div class="cycle-num">04</div>
+            <div class="cycle-info">
+              <h4>Реставрация</h4>
+              <p>Бережное восстановление объектов наследия</p>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:24px;padding:24px 32px;background:var(--steel);border:1px solid var(--border);">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Экспертный капитал</div>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.8;font-weight:300;">Штатная команда специалистов с уникальными допусками гарантирует безупречное исполнение государственных и коммерческих контрактов.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-header reveal">
+      <div class="section-tag">Направления</div>
+      <h2 class="section-title">Полный цикл работ</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <span class="service-icon">🔭</span>
+        <div class="service-title">Инженерные изыскания</div>
+        <p class="service-desc">Высокоточные геодезические, геологические и экологические изыскания для объектов промышленного и гражданского строительства.</p>
+        <div class="service-tags">
+          <span class="tag">Геодезия</span>
+          <span class="tag">Геология</span>
+          <span class="tag">Экология</span>
+        </div>
+      </div>
+      <div class="service-card reveal" style="transition-delay:0.1s">
+        <span class="service-icon">📐</span>
+        <div class="service-title">Проектирование</div>
+        <p class="service-desc">Комплексное проектирование объектов промышленного, гражданского строительства и реставрации исторического значения.</p>
+        <div class="service-tags">
+          <span class="tag">Промышленное</span>
+          <span class="tag">Гражданское</span>
+          <span class="tag">Реставрация</span>
+        </div>
+      </div>
+      <div class="service-card reveal" style="transition-delay:0.2s">
+        <span class="service-icon">🏗️</span>
+        <div class="service-title">Капитальное строительство</div>
+        <p class="service-desc">Весь комплекс строительно-монтажных работ для объектов государственных и коммерческих заказчиков любого уровня сложности.</p>
+        <div class="service-tags">
+          <span class="tag">СМР</span>
+          <span class="tag">Госконтракты</span>
+          <span class="tag">Под ключ</span>
+        </div>
+      </div>
+      <div class="service-card reveal" style="transition-delay:0.3s">
+        <span class="service-icon">🏛️</span>
+        <div class="service-title">Реставрация наследия</div>
+        <p class="service-desc">Бережное восстановление памятников архитектуры и культурного наследия. Более 40 объектов исторического значения.</p>
+        <div class="service-tags">
+          <span class="tag">Памятники</span>
+          <span class="tag">Архитектура</span>
+          <span class="tag">Сохранение</span>
+        </div>
+      </div>
+      <div class="service-card reveal" style="transition-delay:0.4s">
+        <span class="service-icon">🏭</span>
+        <div class="service-title">Промышленное строительство</div>
+        <p class="service-desc">Реализация технически сложных проектов в сфере промышленного строительства с применением передовых инженерных решений.</p>
+        <div class="service-tags">
+          <span class="tag">Инжиниринг</span>
+          <span class="tag">Промышленность</span>
+        </div>
+      </div>
+      <div class="service-card reveal" style="transition-delay:0.5s">
+        <span class="service-icon">🏙️</span>
+        <div class="service-title">Гражданское строительство</div>
+        <p class="service-desc">Строительство и восстановление объектов гражданского назначения с соблюдением всех нормативных требований и сроков.</p>
+        <div class="service-tags">
+          <span class="tag">Административное</span>
+          <span class="tag">Гражданское</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-header reveal">
+      <div class="section-tag">Портфолио</div>
+      <h2 class="section-title">Реализованные проекты</h2>
+    </div>
+    <p class="portfolio-intro reveal">Восстановлено более 40 объектов различной сложности исторического значения и административного направления.</p>
+
+    <div class="portfolio-grid">
+      <div class="portfolio-card featured reveal">
+        <div class="portfolio-meta">
+          <span class="portfolio-type">Реставрация · Флагманский проект</span>
+          <span class="portfolio-year">Исторические объекты</span>
+        </div>
+        <div class="portfolio-title">Объекты культурного и исторического наследия</div>
+        <p class="portfolio-desc">Портфель «ИНТЕХ» включает десятки реализованных кейсов в сфере промышленного, гражданского строительства и реставрации исторического значения. Построили и восстановили огромное количество объектов, среди которых присутствуют объекты исторического значения.</p>
+        <div class="portfolio-stats">
+          <div class="p-stat"><span class="p-stat-val">40+</span><span class="p-stat-label">Объектов</span></div>
+          <div class="p-stat"><span class="p-stat-val">18+</span><span class="p-stat-label">Лет опыта</span></div>
+          <div class="p-stat"><span class="p-stat-val">15+ млрд</span><span class="p-stat-label">Рублей</span></div>
+        </div>
+      </div>
+
+      <div class="portfolio-card reveal">
+        <div class="portfolio-meta">
+          <span class="portfolio-type">Промышленное</span>
+        </div>
+        <div class="portfolio-title">Промышленное строительство</div>
+        <p class="portfolio-desc">Реализация технически сложных проектов в сфере промышленного строительства с применением передовых инженерных решений и современных технологий.</p>
+        <div class="portfolio-stats">
+          <div class="p-stat"><span class="p-stat-val">Комплекс</span><span class="p-stat-label">СМР</span></div>
+          <div class="p-stat"><span class="p-stat-val">Гос.</span><span class="p-stat-label">Контракты</span></div>
+        </div>
+      </div>
+
+      <div class="portfolio-card reveal" style="transition-delay:0.1s">
+        <div class="portfolio-meta">
+          <span class="portfolio-type">Гражданское</span>
+        </div>
+        <div class="portfolio-title">Гражданское строительство</div>
+        <p class="portfolio-desc">Строительство и восстановление объектов гражданского назначения административного направления для государственных и коммерческих заказчиков.</p>
+        <div class="portfolio-stats">
+          <div class="p-stat"><span class="p-stat-val">Полный</span><span class="p-stat-label">Цикл работ</span></div>
+          <div class="p-stat"><span class="p-stat-val">Любой</span><span class="p-stat-label">Уровень сложности</span></div>
+        </div>
+      </div>
+
+      <div class="portfolio-card reveal" style="transition-delay:0.2s">
+        <div class="portfolio-meta">
+          <span class="portfolio-type">Реставрация</span>
+        </div>
+        <div class="portfolio-title">Памятники архитектуры</div>
+        <p class="portfolio-desc">Компания-эксперт в области реставрации и сохранения памятников архитектуры. Бережное восстановление объектов культурного наследия с применением специальных технологий.</p>
+        <div class="portfolio-stats">
+          <div class="p-stat"><span class="p-stat-val">40+</span><span class="p-stat-label">Исторических</span></div>
+          <div class="p-stat"><span class="p-stat-val">Уникал.</span><span class="p-stat-label">Допуски</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CLIENTS -->
+<section id="clients">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-header reveal">
+      <div class="section-tag">Наши заказчики</div>
+      <h2 class="section-title">Государственные и коммерческие партнёры</h2>
+    </div>
+    <div class="clients-grid">
+      <div class="client-card reveal">
+        <span class="client-abbr">СПбГПУ</span>
+        <div class="client-name">Санкт-Петербургский государственный политехнический университет</div>
+        <span class="client-sector">Образование · Государственный</span>
+      </div>
+      <div class="client-card reveal" style="transition-delay:0.1s">
+        <span class="client-abbr">СПбГАУ</span>
+        <div class="client-name">Санкт-Петербургский государственный аграрный университет</div>
+        <span class="client-sector">Образование · Государственный</span>
+      </div>
+      <div class="client-card reveal" style="transition-delay:0.2s">
+        <span class="client-abbr">КТСП</span>
+        <div class="client-name">ЗАО «Контейнерный терминал Санкт-Петербург»</div>
+        <span class="client-sector">Транспорт · Коммерческий</span>
+      </div>
+      <div class="client-card reveal" style="transition-delay:0.3s">
+        <span class="client-abbr">МОРПОРТ</span>
+        <div class="client-name">АО «Морской порт»</div>
+        <span class="client-sector">Инфраструктура · Коммерческий</span>
+      </div>
+      <div class="client-card reveal" style="transition-delay:0.4s">
+        <span class="client-abbr">МА ГБУК</span>
+        <div class="client-name">Музейное агентство ГБУК Ленинградской области</div>
+        <span class="client-sector">Культура · Государственный</span>
+      </div>
+      <div class="client-card reveal" style="transition-delay:0.5s">
+        <span class="client-abbr">МИК</span>
+        <div class="client-name">Музей истории Кронштадта СПб ГБУ</div>
+        <span class="client-sector">Культура · Государственный</span>
+      </div>
+      <div class="client-card reveal" style="transition-delay:0.6s">
+        <span class="client-abbr">ФКР СПб</span>
+        <div class="client-name">Фонд капитального ремонта по г. Санкт-Петербург</div>
+        <span class="client-sector">ЖКХ · Государственный</span>
+      </div>
+      <div class="client-card reveal" style="transition-delay:0.7s">
+        <span class="client-abbr">ФКР ЛО</span>
+        <div class="client-name">Фонд капитального ремонта Ленинградской области</div>
+        <span class="client-sector">ЖКХ · Государственный</span>
+      </div>
+    </div>
+    <div style="margin-top:40px;padding:32px 40px;background:var(--dark2);border:1px solid var(--border);border-left:3px solid var(--gold);max-width:1100px;" class="reveal">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px;">И другие заказчики</p>
+      <p style="font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.8;">Широкий круг заказчиков, работающих в госсекторе: министерства, ведомства, государственные учреждения культуры, образования и инфраструктуры Санкт-Петербурга и Ленинградской области.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">IN<span>TECH</span></div>
+  <div class="footer-copy">На рынке с 2007 года · Выполнено проектов более чем на 15 млрд ₽</div>
+  <div class="footer-since">Since 2007</div>
+</footer>
+
+<script>
+  // Custom Cursor
+  const cursor = document.getElementById('cursor');
+  const follower = document.getElementById('cursorFollower');
+  let mx = 0, my = 0, fx = 0, fy = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 5 + 'px';
+    cursor.style.top = my - 5 + 'px';
+  });
+  function animFollower() {
+    fx += (mx - fx) * 0.12;
+    fy += (my - fy) *.12;
+    follower.style.left = fx - 18 + 'px';
+    follower.style.top = fy - 18 + 'px';
+    requestAnimationFrame(animFollower);
+  }
+  animFollower();
+
+  // Scroll Reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // Counter Animation
+  function animateCount(el, target, duration = 2000) {
+    let start = 0;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { start = target; clearInterval(timer); }
+      el.textContent = Math.floor(start);
+    }, 16);
+  }
+
+  const statObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const nums = e.target.querySelectorAll('.stat-number');
+        nums.forEach(n => {
+          const t = parseInt(n.getAttribute('data-target'));
+          animateCount(n, t);
+        });
+        statObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.stat-card').forEach(c => statObserver.observe(c));
+
+  // Hover cursor scale
+  document.querySelectorAll('a, button, .stat-card, .service-card, .portfolio-card, .client-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'scale(2.5)';
+      follower.style.transform = 'scale(1.5)';
+      follower.style.borderColor = 'rgba(201,168,76,0.8)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'scale(1)';
+      follower.style.transform = 'scale(1)';
+      follower.style.borderColor = 'rgba(201,168,76,0.5)';
+    });
+  });
+</script>
+</body>
+</html>
